@@ -87,7 +87,7 @@ function UserPhotos() {
 
     try {
       const response = await fetch(
-        `https://3pqzgw-8081.csb.app/api/photo/commentsOfPhoto/${photoId}`,
+        `http://localhost:8081/api/photo/commentsOfPhoto/${photoId}`,
         {
           method: "POST",
           headers: {
@@ -163,7 +163,7 @@ function UserPhotos() {
         <Card key={photo._id} className="photo-card">
           <CardMedia
             component="img"
-            image={`https://3pqzgw-8081.csb.app/images/${photo.file_name}`}
+            image={`http://localhost:8081/images/${photo.file_name}`}
             alt={`Photo by ${user.last_name}`}
             className="photo-image"
           />
