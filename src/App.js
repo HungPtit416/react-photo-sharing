@@ -25,29 +25,46 @@ const App = (props) => {
 
   const checkLoginStatus = async () => {
     try {
-      console.log("🔍 Checking login status...");
+      console.log("Checking login status...");
 
-      // Try to get current user info from auth router
+      // Get JWT token from localStorage
+      const token = localStorage.getItem("authToken");
+
+      if (!token) {
+        console.log("No token found - not logged in");
+        setUser(null);
+        setLoading(false);
+        return;
+      }
+
+      // Try to get current user info from auth router with JWT token
       const response = await fetch("http://localhost:8081/admin/current", {
         credentials: "include",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       });
 
-      console.log("📡 Response status:", response.status);
+      console.log("Response status:", response.status);
 
       if (response.status === 401) {
-        console.log("❌ Not logged in - 401");
+        console.log("Not logged in - 401, removing invalid token");
+        localStorage.removeItem("authToken");
         setUser(null);
       } else if (response.ok) {
         // Successfully got user data
         const userData = await response.json();
-        console.log("✅ User data received:", userData);
+        console.log("User data received:", userData);
         setUser(userData);
       } else {
-        console.log("❌ Other error:", response.status);
+        console.log("Other error:", response.status);
+        localStorage.removeItem("authToken");
         setUser(null);
       }
     } catch (err) {
-      console.log("❌ Fetch error:", err);
+      console.log("Fetch error:", err);
+      localStorage.removeItem("authToken");
       setUser(null);
     } finally {
       setLoading(false);
@@ -60,13 +77,24 @@ const App = (props) => {
 
   const handleLogout = async () => {
     try {
-      await fetch("http://localhost:8081/admin/logout", {
-        method: "POST",
-        credentials: "include",
-      });
+      // Get token for logout request (though server doesn't need to do much for JWT logout)
+      const token = localStorage.getItem("authToken");
+
+      if (token) {
+        await fetch("http://localhost:8081/admin/logout", {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+      }
     } catch (err) {
       console.error("Logout error:", err);
     } finally {
+      // Remove token from localStorage (most important part)
+      localStorage.removeItem("authToken");
       setUser(null);
     }
   };

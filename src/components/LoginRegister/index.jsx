@@ -68,7 +68,7 @@ function LoginRegister({ onLogin }) {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include", // Important for session cookies
+        credentials: "include",
         body: JSON.stringify({
           login_name: loginName.trim(),
           password: loginPassword,
@@ -76,8 +76,13 @@ function LoginRegister({ onLogin }) {
       });
 
       if (response.ok) {
-        const userData = await response.json();
-        onLogin(userData); // Pass user data to parent component
+        const data = await response.json();
+
+        // Store JWT token in localStorage
+        localStorage.setItem("authToken", data.token);
+
+        // Pass user data to parent component
+        onLogin(data.user);
       } else {
         const errorData = await response.json();
         setLoginError(errorData.error || "Login failed");

@@ -77,6 +77,7 @@ function TopBar({ user, onLogout }) {
     }
   };
 
+  // FIXED handleUpload function
   const handleUpload = async () => {
     if (!selectedFile) {
       setUploadError("Please select a file");
@@ -87,6 +88,13 @@ function TopBar({ user, onLogout }) {
     setUploadError("");
 
     try {
+      // Get JWT token from localStorage
+      const token = localStorage.getItem("authToken");
+
+      if (!token) {
+        throw new Error("No authentication token found. Please login again.");
+      }
+
       const formData = new FormData();
       formData.append("photo", selectedFile);
 
@@ -95,11 +103,21 @@ function TopBar({ user, onLogout }) {
         {
           method: "POST",
           credentials: "include",
+          headers: {
+            Authorization: `Bearer ${token}`, // ADD THIS LINE!
+            // Don't add Content-Type for FormData, browser will set it automatically
+          },
           body: formData,
         }
       );
 
       if (!response.ok) {
+        if (response.status === 401) {
+          // Token expired or invalid
+          localStorage.removeItem("authToken");
+          window.location.reload();
+          throw new Error("Session expired. Please login again.");
+        }
         const errorData = await response.json();
         throw new Error(errorData.error || "Upload failed");
       }
