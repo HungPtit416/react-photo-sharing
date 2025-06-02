@@ -99,7 +99,7 @@ function TopBar({ user, onLogout }) {
       formData.append("photo", selectedFile);
 
       const response = await fetch(
-        "http://localhost:8081/api/photo/photos/new",
+        "https://bcd210b6-338b-4b20-964a-2be4c85f4ce2-00-3k548uxwx7434.sisko.replit.dev/api/photo/photos/new",
         {
           method: "POST",
           credentials: "include",

@@ -5,7 +5,8 @@
  * @returns {Promise} A promise that resolves with the model data.
  */
 function fetchModel(url) {
-  const baseUrl = "http://localhost:8081/api";
+  const baseUrl =
+    "https://bcd210b6-338b-4b20-964a-2be4c85f4ce2-00-3k548uxwx7434.sisko.replit.dev/api";
   const fullUrl = `${baseUrl}${url}`;
 
   // Get JWT token from localStorage

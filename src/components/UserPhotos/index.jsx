@@ -94,7 +94,7 @@ function UserPhotos() {
       }
 
       const response = await fetch(
-        `http://localhost:8081/api/photo/commentsOfPhoto/${photoId}`,
+        `https://bcd210b6-338b-4b20-964a-2be4c85f4ce2-00-3k548uxwx7434.sisko.replit.dev/api/photo/commentsOfPhoto/${photoId}`,
         {
           method: "POST",
           headers: {
@@ -177,7 +177,7 @@ function UserPhotos() {
         <Card key={photo._id} className="photo-card">
           <CardMedia
             component="img"
-            image={`http://localhost:8081/images/${photo.file_name}`}
+            image={`https://bcd210b6-338b-4b20-964a-2be4c85f4ce2-00-3k548uxwx7434.sisko.replit.dev/images/${photo.file_name}`}
             alt={`Photo by ${user.last_name}`}
             className="photo-image"
           />
