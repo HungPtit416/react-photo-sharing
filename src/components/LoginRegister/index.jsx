@@ -63,7 +63,7 @@ function LoginRegister({ onLogin }) {
     setLoginError("");
 
     try {
-      const response = await fetch("http://localhost:8081/admin/login", {
+      const response = await fetch("https://3pqzgw-8081.csb.app/admin/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -136,7 +136,7 @@ function LoginRegister({ onLogin }) {
     setRegSuccess("");
 
     try {
-      const response = await fetch("http://localhost:8081/user", {
+      const response = await fetch("https://3pqzgw-8081.csb.app/user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

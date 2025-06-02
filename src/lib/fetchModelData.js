@@ -5,7 +5,7 @@
  * @returns {Promise} A promise that resolves with the model data.
  */
 function fetchModel(url) {
-  const baseUrl = "http://localhost:8081/api";
+  const baseUrl = "https://3pqzgw-8081.csb.app/api";
   const fullUrl = `${baseUrl}${url}`;
 
   return fetch(fullUrl, {

@@ -91,7 +91,7 @@ function TopBar({ user, onLogout }) {
       formData.append("photo", selectedFile);
 
       const response = await fetch(
-        "http://localhost:8081/api/photo/photos/new",
+        "https://3pqzgw-8081.csb.app/api/photo/photos/new",
         {
           method: "POST",
           credentials: "include",

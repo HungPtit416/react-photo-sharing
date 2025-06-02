@@ -28,9 +28,12 @@ const App = (props) => {
       console.log("🔍 Checking login status...");
 
       // Try to get current user info from auth router
-      const response = await fetch("http://localhost:8081/admin/current", {
-        credentials: "include",
-      });
+      const response = await fetch(
+        "https://3pqzgw-8081.csb.app/admin/current",
+        {
+          credentials: "include",
+        }
+      );
 
       console.log("📡 Response status:", response.status);
 
@@ -60,7 +63,7 @@ const App = (props) => {
 
   const handleLogout = async () => {
     try {
-      await fetch("http://localhost:8081/admin/logout", {
+      await fetch("https://3pqzgw-8081.csb.app/admin/logout", {
         method: "POST",
         credentials: "include",
       });
