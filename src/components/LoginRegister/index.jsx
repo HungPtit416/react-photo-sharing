@@ -63,20 +63,17 @@ function LoginRegister({ onLogin }) {
     setLoginError("");
 
     try {
-      const response = await fetch(
-        "https://bcd210b6-338b-4b20-964a-2be4c85f4ce2-00-3k548uxwx7434.sisko.replit.dev/admin/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({
-            login_name: loginName.trim(),
-            password: loginPassword,
-          }),
-        }
-      );
+      const response = await fetch("https://g4462g-8081.csb.app/admin/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          login_name: loginName.trim(),
+          password: loginPassword,
+        }),
+      });
 
       if (response.ok) {
         const data = await response.json();
@@ -144,25 +141,22 @@ function LoginRegister({ onLogin }) {
     setRegSuccess("");
 
     try {
-      const response = await fetch(
-        "https://bcd210b6-338b-4b20-964a-2be4c85f4ce2-00-3k548uxwx7434.sisko.replit.dev/user",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({
-            login_name: regFormData.login_name.trim(),
-            password: regFormData.password,
-            first_name: regFormData.first_name.trim(),
-            last_name: regFormData.last_name.trim(),
-            location: regFormData.location.trim(),
-            description: regFormData.description.trim(),
-            occupation: regFormData.occupation.trim(),
-          }),
-        }
-      );
+      const response = await fetch("https://g4462g-8081.csb.app/user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          login_name: regFormData.login_name.trim(),
+          password: regFormData.password,
+          first_name: regFormData.first_name.trim(),
+          last_name: regFormData.last_name.trim(),
+          location: regFormData.location.trim(),
+          description: regFormData.description.trim(),
+          occupation: regFormData.occupation.trim(),
+        }),
+      });
 
       if (response.ok) {
         const userData = await response.json();

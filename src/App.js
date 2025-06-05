@@ -39,7 +39,7 @@ const App = (props) => {
 
       // Try to get current user info from auth router with JWT token
       const response = await fetch(
-        "https://bcd210b6-338b-4b20-964a-2be4c85f4ce2-00-3k548uxwx7434.sisko.replit.dev/admin/current",
+        "https://g4462g-8081.csb.app/admin/current",
         {
           credentials: "include",
           headers: {
@@ -84,17 +84,14 @@ const App = (props) => {
       const token = localStorage.getItem("authToken");
 
       if (token) {
-        await fetch(
-          "https://bcd210b6-338b-4b20-964a-2be4c85f4ce2-00-3k548uxwx7434.sisko.replit.dev/admin/logout",
-          {
-            method: "POST",
-            credentials: "include",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        await fetch("https://g4462g-8081.csb.app/admin/logout", {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
       }
     } catch (err) {
       console.error("Logout error:", err);
