@@ -69,7 +69,6 @@ function UserPhotos() {
     }
   };
 
-  // Submit comment - FIXED VERSION
   const handleSubmitComment = async (photoId) => {
     const commentText = commentTexts[photoId] || "";
 
@@ -99,7 +98,7 @@ function UserPhotos() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // ADD THIS LINE!
+            Authorization: `Bearer ${token}`,
           },
           credentials: "include",
           body: JSON.stringify({

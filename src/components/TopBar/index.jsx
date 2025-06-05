@@ -104,7 +104,7 @@ function TopBar({ user, onLogout }) {
           method: "POST",
           credentials: "include",
           headers: {
-            Authorization: `Bearer ${token}`, // ADD THIS LINE!
+            Authorization: `Bearer ${token}`,
             // Don't add Content-Type for FormData, browser will set it automatically
           },
           body: formData,

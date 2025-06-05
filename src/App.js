@@ -15,8 +15,8 @@ import UserPhotos from "./components/UserPhotos";
 import LoginRegister from "./components/LoginRegister";
 
 const App = (props) => {
-  const [user, setUser] = useState(null); // Current logged in user
-  const [loading, setLoading] = useState(true); // Loading state
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   // Check if user is already logged in when app loads
   useEffect(() => {

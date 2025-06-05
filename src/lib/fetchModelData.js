@@ -21,7 +21,7 @@ function fetchModel(url) {
   }
 
   return fetch(fullUrl, {
-    credentials: "include", // Still needed for CORS
+    credentials: "include",
     headers: headers,
   })
     .then((response) => {
