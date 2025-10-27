@@ -69,7 +69,6 @@ function UserPhotos() {
     }
   };
 
-  // Submit comment
   const handleSubmitComment = async (photoId) => {
     const commentText = commentTexts[photoId] || "";
 
@@ -86,12 +85,20 @@ function UserPhotos() {
     setErrors((prev) => ({ ...prev, [photoId]: null }));
 
     try {
+      // Get JWT token from localStorage
+      const token = localStorage.getItem("authToken");
+
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+
       const response = await fetch(
         `http://localhost:8081/api/photo/commentsOfPhoto/${photoId}`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           credentials: "include",
           body: JSON.stringify({
@@ -101,6 +108,12 @@ function UserPhotos() {
       );
 
       if (!response.ok) {
+        if (response.status === 401) {
+          // Token expired or invalid
+          localStorage.removeItem("authToken");
+          window.location.reload();
+          throw new Error("Session expired. Please login again.");
+        }
         const errorData = await response.json();
         throw new Error(errorData.error || "Failed to add comment");
       }
@@ -230,7 +243,7 @@ function UserPhotos() {
                     multiline
                     minRows={2}
                     maxRows={4}
-                    placeholder="Write your comment here..."
+                    placeholder="Write your comment here"
                     value={commentTexts[photo._id] || ""}
                     onChange={(e) =>
                       handleCommentChange(photo._id, e.target.value)
