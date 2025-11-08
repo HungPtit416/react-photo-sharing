@@ -13,7 +13,7 @@ import UserDetail from "./components/UserDetail";
 import UserList from "./components/UserList";
 import UserPhotos from "./components/UserPhotos";
 import LoginRegister from "./components/LoginRegister";
-
+import UserHome from "./components/UserHome";
 const App = (props) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -141,6 +141,7 @@ const App = (props) => {
           <Grid item sm={9}>
             <Paper className="main-grid-item">
               <Routes>
+                <Route path="/home" element={<UserHome />} />
                 <Route path="/users/:userId" element={<UserDetail />} />
                 <Route path="/photos/:userId" element={<UserPhotos />} />
                 <Route path="/users" element={<UserList />} />

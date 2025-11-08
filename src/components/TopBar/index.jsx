@@ -12,9 +12,10 @@ import {
   Alert,
   CircularProgress,
 } from "@mui/material";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "./styles.css";
 import models from "../../modelData/models";
+
 
 /**
  * Define TopBar, a React component of Project 4.
@@ -26,6 +27,8 @@ function TopBar({ user, onLogout }) {
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState("");
   const [uploadSuccess, setUploadSuccess] = useState("");
+  const navigate = useNavigate();
+
 
   const getContext = () => {
     let context = "";
@@ -172,6 +175,13 @@ function TopBar({ user, onLogout }) {
 
             {user ? (
               <>
+                <Button
+                  color="inherit"
+                  onClick={() => navigate("/home")}
+                  sx={{ mr: 2 }}
+                >
+                  Home
+                </Button>
                 <Button
                   color="inherit"
                   onClick={() => setUploadDialogOpen(true)}
