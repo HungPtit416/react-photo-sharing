@@ -142,16 +142,16 @@ function UserHome() {
             const result = await response.json();
 
             // Update photos state to include new comment
-            setPhotos((prevPhotos) =>
-                prevPhotos.map((photo) =>
-                    photo._id === photoId
-                        ? {
-                            ...photo,
-                            comments: [...photo.comments, result.comment],
-                        }
-                        : photo
-                )
-            );
+            // setPhotos((prevPhotos) =>
+            //     prevPhotos.map((photo) =>
+            //         photo._id === photoId
+            //             ? {
+            //                 ...photo,
+            //                 comments: [...photo.comments, result.comment],
+            //             }
+            //             : photo
+            //     )
+            // );
 
             // Clear comment text
             setCommentTexts((prev) => ({
