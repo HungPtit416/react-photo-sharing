@@ -12,6 +12,7 @@ import {
     Button,
     Box,
     Alert,
+    Snackbar,
 } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 import "./styles.css";
@@ -29,6 +30,29 @@ function UserHome() {
     const [errors, setErrors] = useState({}); // Track errors for each photo
     const [isLoggedIn, setIsLoggedIn] = useState(true); // Assume user is logged in if they can access this page
 
+    // Snackbar state
+    const [snackbar, setSnackbar] = useState({
+        open: false,
+        message: "",
+        severity: "info" // "success" | "error" | "warning" | "info"
+    });
+
+    // Function để hiển thị notification
+    const showNotification = ({ message, severity = "info" }) => {
+        setSnackbar({
+            open: true,
+            message,
+            severity
+        });
+    };
+
+    // Đóng snackbar
+    const handleCloseSnackbar = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setSnackbar({ ...snackbar, open: false });
+    };
 
     const fetchAllPhotos = async () => {
         try {
@@ -52,7 +76,9 @@ function UserHome() {
         }
 
     };
-    usePhotoSSE(setPhotos);
+    // Pass showNotification vào usePhotoSSE
+    usePhotoSSE(setPhotos, showNotification);
+
     // 1. Lấy ảnh
     useEffect(() => {
         fetchAllPhotos()
@@ -139,25 +165,16 @@ function UserHome() {
                 throw new Error(errorData.error || "Failed to add comment");
             }
 
-            const result = await response.json();
-
-            // Update photos state to include new comment
-            // setPhotos((prevPhotos) =>
-            //     prevPhotos.map((photo) =>
-            //         photo._id === photoId
-            //             ? {
-            //                 ...photo,
-            //                 comments: [...photo.comments, result.comment],
-            //             }
-            //             : photo
-            //     )
-            // );
-
             // Clear comment text
             setCommentTexts((prev) => ({
                 ...prev,
                 [photoId]: "",
             }));
+            // Hiển thị thông báo thành công
+            showNotification({
+                message: "Comment added successfully!",
+                severity: "success"
+            });
         } catch (error) {
             console.error("Error adding comment:", error);
             setErrors((prev) => ({
@@ -189,9 +206,21 @@ function UserHome() {
 
     return (
         <div className="user-photos">
-            {/* <Typography variant="h4" component="h1">
-                Photos of {user.first_name} {user.last_name}
-            </Typography> */}
+            {/* Snackbar for notifications */}
+            <Snackbar
+                open={snackbar.open}
+                autoHideDuration={4000}
+                onClose={handleCloseSnackbar}
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+            >
+                <Alert 
+                    onClose={handleCloseSnackbar} 
+                    severity={snackbar.severity}
+                    sx={{ width: '100%' }}
+                >
+                    {snackbar.message}
+                </Alert>
+            </Snackbar>
 
             {photos.map((photo) => (
                 <Card key={photo._id} className="photo-card">
