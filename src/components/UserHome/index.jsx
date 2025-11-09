@@ -16,6 +16,7 @@ import {
 import { Link, useParams } from "react-router-dom";
 import "./styles.css";
 import fetchModel from "../../lib/fetchModelData";
+import usePhotoSSE from "../../hooks/usePhotoSSE";
 
 /**
  * Define UserHome , a React component of Project 4.
@@ -27,6 +28,7 @@ function UserHome() {
     const [loading, setLoading] = useState({}); // Track loading state for each photo
     const [errors, setErrors] = useState({}); // Track errors for each photo
     const [isLoggedIn, setIsLoggedIn] = useState(true); // Assume user is logged in if they can access this page
+
 
     const fetchAllPhotos = async () => {
         try {
@@ -50,6 +52,7 @@ function UserHome() {
         }
 
     };
+    usePhotoSSE(setPhotos);
     // 1. Lấy ảnh
     useEffect(() => {
         fetchAllPhotos()
