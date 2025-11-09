@@ -11,24 +11,24 @@ import {
   Input,
   Alert,
   CircularProgress,
+  Chip,
 } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
+import PeopleIcon from "@mui/icons-material/People";
 import "./styles.css";
 import models from "../../modelData/models";
-
 
 /**
  * Define TopBar, a React component of Project 4.
  */
-function TopBar({ user, onLogout }) {
+function TopBar({ user, onLogout, onlineCount = 0 }) {
   const location = useLocation();
+  const navigate = useNavigate();
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState("");
   const [uploadSuccess, setUploadSuccess] = useState("");
-  const navigate = useNavigate();
-
 
   const getContext = () => {
     let context = "";
@@ -63,13 +63,11 @@ function TopBar({ user, onLogout }) {
   const handleFileSelect = (event) => {
     const file = event.target.files[0];
     if (file) {
-      // Validate file type
       if (!file.type.startsWith("image/")) {
         setUploadError("Please select an image file");
         return;
       }
 
-      // Validate file size (5MB limit)
       if (file.size > 5 * 1024 * 1024) {
         setUploadError("File size must be less than 5MB");
         return;
@@ -80,7 +78,6 @@ function TopBar({ user, onLogout }) {
     }
   };
 
-  // FIXED handleUpload function
   const handleUpload = async () => {
     if (!selectedFile) {
       setUploadError("Please select a file");
@@ -91,7 +88,6 @@ function TopBar({ user, onLogout }) {
     setUploadError("");
 
     try {
-      // Get JWT token from localStorage
       const token = localStorage.getItem("authToken");
 
       if (!token) {
@@ -108,7 +104,6 @@ function TopBar({ user, onLogout }) {
           credentials: "include",
           headers: {
             Authorization: `Bearer ${token}`,
-            // Don't add Content-Type for FormData, browser will set it automatically
           },
           body: formData,
         }
@@ -116,7 +111,6 @@ function TopBar({ user, onLogout }) {
 
       if (!response.ok) {
         if (response.status === 401) {
-          // Token expired or invalid
           localStorage.removeItem("authToken");
           window.location.reload();
           throw new Error("Session expired. Please login again.");
@@ -129,12 +123,10 @@ function TopBar({ user, onLogout }) {
       setUploadSuccess("Photo uploaded successfully!");
       setSelectedFile(null);
 
-      // Close dialog after a short delay
       setTimeout(() => {
         setUploadDialogOpen(false);
         setUploadSuccess("");
 
-        // Refresh page if on photos page to show new photo
         if (location.pathname.includes("/photos/")) {
           window.location.reload();
         }
@@ -171,6 +163,24 @@ function TopBar({ user, onLogout }) {
               <Typography variant="h6" color="inherit" sx={{ mr: 2 }}>
                 {context}
               </Typography>
+            )}
+
+            {/* Online Users Count */}
+            {user && onlineCount > 0 && (
+              <Chip
+                icon={<PeopleIcon />}
+                label={`${onlineCount} Online`}
+                color="success"
+                variant="outlined"
+                sx={{
+                  mr: 2,
+                  color: "white",
+                  borderColor: "white",
+                  "& .MuiChip-icon": {
+                    color: "white",
+                  },
+                }}
+              />
             )}
 
             {user ? (

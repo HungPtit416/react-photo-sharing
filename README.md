@@ -68,3 +68,67 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+```
+photo-sharing-v1
+├─ .idea
+│  ├─ .name
+│  ├─ modules.xml
+│  ├─ photo-sharing-v1.iml
+│  └─ workspace.xml
+├─ package-lock.json
+├─ package.json
+├─ public
+│  ├─ favicon.ico
+│  ├─ images
+│  │  ├─ kenobi1.jpg
+│  │  ├─ kenobi2.jpg
+│  │  ├─ kenobi3.jpg
+│  │  ├─ kenobi4.jpg
+│  │  ├─ ludgate1.jpg
+│  │  ├─ malcolm1.jpg
+│  │  ├─ malcolm2.jpg
+│  │  ├─ ouster.jpg
+│  │  ├─ ripley1.jpg
+│  │  ├─ ripley2.jpg
+│  │  ├─ took1.jpg
+│  │  └─ took2.jpg
+│  ├─ index.html
+│  ├─ logo192.png
+│  ├─ logo512.png
+│  ├─ manifest.json
+│  └─ robots.txt
+├─ README.md
+└─ src
+   ├─ App.css
+   ├─ App.js
+   ├─ App.test.js
+   ├─ components
+   │  ├─ LoginRegister
+   │  │  └─ index.jsx
+   │  ├─ TopBar
+   │  │  ├─ index.jsx
+   │  │  └─ styles.css
+   │  ├─ UserDetail
+   │  │  ├─ index.jsx
+   │  │  └─ styles.css
+   │  ├─ UserHome
+   │  │  ├─ index.jsx
+   │  │  └─ styles.css
+   │  ├─ UserList
+   │  │  ├─ index.jsx
+   │  │  └─ styles.css
+   │  └─ UserPhotos
+   │     ├─ index.jsx
+   │     └─ styles.css
+   ├─ index.css
+   ├─ index.js
+   ├─ lib
+   │  └─ fetchModelData.js
+   ├─ logo.svg
+   ├─ modelData
+   │  └─ models.js
+   ├─ reportWebVitals.js
+   └─ setupTests.js
+
+```
