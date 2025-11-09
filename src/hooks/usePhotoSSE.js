@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 
-function usePhotoSSE(setPhotos, showNotification) {
+// THÊM currentUserId vào tham số
+function usePhotoSSE(setPhotos, showNotification, currentUserId) {
   const eventSourceRef = useRef(null);
 
   // Hàm lấy thông tin user từ user_id
@@ -45,12 +46,12 @@ function usePhotoSSE(setPhotos, showNotification) {
       const newPhoto = JSON.parse(e.data);
       setPhotos((prev) => [newPhoto, ...prev]);
       console.log("New photo received via SSE:", newPhoto);
-      
+
       // Lấy thông tin user và hiển thị thông báo
       if (showNotification && newPhoto.user_id) {
         const user = await getUserInfo(newPhoto.user_id);
         const userName = formatUserName(user);
-        
+
         showNotification({
           message: `${userName} uploaded a new photo!`,
           severity: "success"
@@ -59,11 +60,18 @@ function usePhotoSSE(setPhotos, showNotification) {
     });
 
     eventSource.addEventListener("new-comment", (e) => {
-      const data = JSON.parse(e.data); // { photo_id, comment }
+      const data = JSON.parse(e.data);
+
+      console.log("🔍 new-comment received:", {
+        photo_id: data.photo_id,
+        photo_owner_id: data.photo_owner_id,
+        commenter_id: data.comment.user._id,
+        currentUserId: currentUserId
+      });
+
       setPhotos((prevPhotos) =>
         prevPhotos.map((photo) => {
           if (photo._id === data.photo_id) {
-            // Dùng Set để đảm bảo không trùng _id
             const allComments = [...photo.comments, data.comment];
             const uniqueComments = Array.from(
               new Map(allComments.map(c => [c._id, c])).values()
@@ -73,18 +81,47 @@ function usePhotoSSE(setPhotos, showNotification) {
           return photo;
         })
       );
-      
-      // Hiển thị thông báo
-      if (showNotification && data.comment.user) {
-        const userName = formatUserName(data.comment.user);
-        
-        showNotification({
-          message: `${userName} commented on a photo`,
-          severity: "info"
+
+      if (
+        showNotification &&
+        data.comment?.user &&
+        currentUserId &&
+        data.photo_owner_id
+      ) {
+        const photoOwnerId = data.photo_owner_id.toString();
+        const commenterId = data.comment.user._id.toString();
+        const currentUserIdStr = currentUserId.toString();
+
+        console.log("🔍 Notification check:", {
+          photoOwnerId,
+          commenterId,
+          currentUserIdStr,
+          isOwner: currentUserIdStr === photoOwnerId,
+          isDifferentUser: currentUserIdStr !== commenterId
+        });
+
+        if (currentUserIdStr === photoOwnerId && currentUserIdStr !== commenterId) {
+          const userName = formatUserName(data.comment.user);
+
+          console.log("Showing notification:", userName);
+
+          showNotification({
+            message: `${userName} commented on your photo`,
+            severity: "info"
+          });
+        } else {
+          console.log("Not showing notification - conditions not met");
+        }
+      } else {
+        console.log("Missing required data:", {
+          hasShowNotification: !!showNotification,
+          hasCommentUser: !!data.comment?.user,
+          hasCurrentUserId: !!currentUserId,
+          hasPhotoOwnerId: !!data.photo_owner_id
         });
       }
     });
-    
+
     eventSource.onerror = (error) => {
       console.error("SSE error:", error);
       if (showNotification) {
@@ -99,7 +136,7 @@ function usePhotoSSE(setPhotos, showNotification) {
       eventSource.close();
       eventSourceRef.current = null;
     };
-  }, [setPhotos, showNotification]);
+  }, [setPhotos, showNotification, currentUserId]); // THÊM currentUserId vào dependencies
 }
 
 export default usePhotoSSE;

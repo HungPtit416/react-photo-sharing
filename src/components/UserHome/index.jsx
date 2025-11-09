@@ -19,9 +19,6 @@ import "./styles.css";
 import fetchModel from "../../lib/fetchModelData";
 import usePhotoSSE from "../../hooks/usePhotoSSE";
 
-/**
- * Define UserHome , a React component of Project 4.
- */
 function UserHome() {
     const [photoUsers, setPhotoUsers] = useState({});
     const [photos, setPhotos] = useState(null);
@@ -29,12 +26,13 @@ function UserHome() {
     const [loading, setLoading] = useState({}); // Track loading state for each photo
     const [errors, setErrors] = useState({}); // Track errors for each photo
     const [isLoggedIn, setIsLoggedIn] = useState(true); // Assume user is logged in if they can access this page
+    const [currentUserId, setCurrentUserId] = useState(null);
 
     // Snackbar state
     const [snackbar, setSnackbar] = useState({
         open: false,
         message: "",
-        severity: "info" // "success" | "error" | "warning" | "info"
+        severity: "info"
     });
 
     // Function để hiển thị notification
@@ -54,30 +52,35 @@ function UserHome() {
         setSnackbar({ ...snackbar, open: false });
     };
 
+    //  lấy currentUserId từ localStorage
+    useEffect(() => {
+        const userId = localStorage.getItem("userId");
+        if (userId) {
+            setCurrentUserId(userId);
+            console.log("Current user ID:", userId);
+        } else {
+            console.warn("No userId found in localStorage");
+        }
+    }, []);
+
     const fetchAllPhotos = async () => {
         try {
-            // 1. Lấy tất cả user
-            const allUsers = await fetchModel("/user/list"); // trả về array [{_id, first_name, last_name}, ...]
-            // 2. Lấy ảnh của từng user
+            const allUsers = await fetchModel("/user/list");
             const photosArrays = await Promise.all(
                 allUsers.map(user =>
                     fetchModel(`/photo/photosOfUser/${user._id}`)
                 )
             );
-            // 3. Gom tất cả ảnh thành 1 mảng
             const allPhotos = photosArrays.flat();
-            // 3b. Sắp xếp từ mới nhất đến cũ nhất
             allPhotos.sort((a, b) => new Date(b.date_time) - new Date(a.date_time));
-            // 4. Cập nhật state
             setPhotos(allPhotos);
-
         } catch (err) {
             console.error("Error fetching photos of all users:", err);
         }
-
     };
-    // Pass showNotification vào usePhotoSSE
-    usePhotoSSE(setPhotos, showNotification);
+
+    // ✅ THÊM currentUserId vào usePhotoSSE
+    usePhotoSSE(setPhotos, showNotification, currentUserId);
 
     // 1. Lấy ảnh
     useEffect(() => {
@@ -100,14 +103,15 @@ function UserHome() {
 
         fetchUsersMap();
     }, [photos]);
-    // Handle comment text change
+
+    // ... rest of the code remains the same
+    
     const handleCommentChange = (photoId, value) => {
         setCommentTexts((prev) => ({
             ...prev,
             [photoId]: value,
         }));
 
-        // Clear error when user starts typing
         if (errors[photoId]) {
             setErrors((prev) => ({
                 ...prev,
@@ -119,7 +123,6 @@ function UserHome() {
     const handleSubmitComment = async (photoId) => {
         const commentText = commentTexts[photoId] || "";
 
-        // Validate comment
         if (!commentText.trim()) {
             setErrors((prev) => ({
                 ...prev,
@@ -132,7 +135,6 @@ function UserHome() {
         setErrors((prev) => ({ ...prev, [photoId]: null }));
 
         try {
-            // Get JWT token from localStorage
             const token = localStorage.getItem("authToken");
 
             if (!token) {
@@ -156,7 +158,6 @@ function UserHome() {
 
             if (!response.ok) {
                 if (response.status === 401) {
-                    // Token expired or invalid
                     localStorage.removeItem("authToken");
                     window.location.reload();
                     throw new Error("Session expired. Please login again.");
@@ -165,12 +166,11 @@ function UserHome() {
                 throw new Error(errorData.error || "Failed to add comment");
             }
 
-            // Clear comment text
             setCommentTexts((prev) => ({
                 ...prev,
                 [photoId]: "",
             }));
-            // Hiển thị thông báo thành công
+            
             showNotification({
                 message: "Comment added successfully!",
                 severity: "success"
@@ -186,7 +186,6 @@ function UserHome() {
         }
     };
 
-    // Handle Enter key press
     const handleKeyPress = (event, photoId) => {
         if (event.key === "Enter" && !event.shiftKey) {
             event.preventDefault();
@@ -198,7 +197,6 @@ function UserHome() {
         return <div>Loading...</div>;
     }
 
-    // Định dạng ngày tháng thành chuỗi thân thiện
     const formatDate = (dateString) => {
         const date = new Date(dateString);
         return date.toLocaleString();
@@ -206,7 +204,6 @@ function UserHome() {
 
     return (
         <div className="user-photos">
-            {/* Snackbar for notifications */}
             <Snackbar
                 open={snackbar.open}
                 autoHideDuration={4000}
@@ -240,7 +237,6 @@ function UserHome() {
                         className="photo-image"
                     />
 
-
                     <CardContent>
                         <Typography variant="body2" color="text.secondary">
                             Posted on: {formatDate(photo.date_time)}
@@ -251,7 +247,6 @@ function UserHome() {
                         </Typography>
 
                         <List>
-                            {/* Kiểm tra xem photo.comments có tồn tại không và có phải là mảng không */}
                             {photo.comments &&
                                 Array.isArray(photo.comments) &&
                                 photo.comments.length > 0 ? (
@@ -285,7 +280,6 @@ function UserHome() {
                             )}
                         </List>
 
-                        {/* Add Comment Section - Only show if user is logged in */}
                         {isLoggedIn && (
                             <Box sx={{ mt: 2, p: 2, bgcolor: "grey.50", borderRadius: 1 }}>
                                 <Typography variant="subtitle2" sx={{ mb: 1 }}>

@@ -78,8 +78,13 @@ function LoginRegister({ onLogin }) {
       if (response.ok) {
         const data = await response.json();
 
-        // Store JWT token in localStorage
+        // LƯU CẢ TOKEN VÀ USER ID VÀO LOCALSTORAGE
         localStorage.setItem("authToken", data.token);
+        localStorage.setItem("userId", data.user._id);  
+        // Optional: Lưu toàn bộ user info để dùng sau
+        localStorage.setItem("userInfo", JSON.stringify(data.user));
+
+        console.log("Login successful, userId:", data.user._id);
 
         // Pass user data to parent component
         onLogin(data.user);
