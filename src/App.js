@@ -56,7 +56,7 @@ const App = (props) => {
       const ws = new WebSocket(`ws://localhost:8081?token=${token}`);
 
       ws.onopen = () => {
-        console.log("✅ WebSocket connected");
+        console.log("WebSocket connected");
         if (reconnectTimeoutRef.current) {
           clearTimeout(reconnectTimeoutRef.current);
           reconnectTimeoutRef.current = null;
@@ -66,7 +66,7 @@ const App = (props) => {
       ws.onmessage = (event) => {
         try {
           const data = JSON.parse(event.data);
-          console.log("📨 WebSocket message:", data);
+          console.log("WebSocket message:", data);
 
           switch (data.type) {
             case "CONNECTED":
@@ -75,7 +75,7 @@ const App = (props) => {
             case "ONLINE_USERS":
               setOnlineCount(data.count);
               setOnlineUserIds(data.userIds || []);
-              console.log(`👥 Online: ${data.count} users`, data.userIds);
+              console.log(`Online: ${data.count} users`, data.userIds);
               break;
             default:
               console.log("Unknown message type:", data.type);
@@ -86,11 +86,11 @@ const App = (props) => {
       };
 
       ws.onerror = (error) => {
-        console.error("❌ WebSocket error:", error);
+        console.error("WebSocket error:", error);
       };
 
       ws.onclose = (event) => {
-        console.log("🔌 WebSocket disconnected:", event.code, event.reason);
+        console.log("WebSocket disconnected:", event.code, event.reason);
         wsRef.current = null;
 
         if (user && event.code !== 1000) {
@@ -249,14 +249,8 @@ const App = (props) => {
                   path="/users"
                   element={<UserList onlineUserIds={onlineUserIds} />}
                 />
-                <Route
-                  path="/"
-                  element={<Navigate to={`/users/${user._id}`} />}
-                />
-                <Route
-                  path="*"
-                  element={<Navigate to={`/users/${user._id}`} />}
-                />
+                <Route path="/" element={<Navigate to={`/home`} />} />
+                <Route path="*" element={<Navigate to={`/home`} />} />
               </Routes>
             </Paper>
           </Grid>
