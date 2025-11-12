@@ -53,7 +53,7 @@ const App = (props) => {
         return;
       }
 
-      const ws = new WebSocket(`ws://localhost:8081?token=${token}`);
+      const ws = new WebSocket(`ws://api.live2am.com/ws?token=${token}`);
 
       ws.onopen = () => {
         console.log("WebSocket connected");
@@ -138,7 +138,7 @@ const App = (props) => {
         return;
       }
 
-      const response = await fetch("http://localhost:8081/admin/current", {
+      const response = await fetch("https://api.live2am.com/admin/current", {
         credentials: "include",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -181,7 +181,7 @@ const App = (props) => {
       const token = localStorage.getItem("authToken");
 
       if (token) {
-        await fetch("http://localhost:8081/admin/logout", {
+        await fetch("https://api.live2am.com/admin/logout", {
           method: "POST",
           credentials: "include",
           headers: {

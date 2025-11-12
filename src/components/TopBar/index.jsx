@@ -98,7 +98,7 @@ function TopBar({ user, onLogout, onlineCount = 0 }) {
       formData.append("photo", selectedFile);
 
       const response = await fetch(
-        "http://localhost:8081/api/photo/photos/new",
+        "https://api.live2am.com/api/photo/photos/new",
         {
           method: "POST",
           credentials: "include",

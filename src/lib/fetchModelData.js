@@ -5,7 +5,7 @@
  * @returns {Promise} A promise that resolves with the model data.
  */
 function fetchModel(url) {
-  const baseUrl = "http://localhost:8081/api";
+  const baseUrl = "https://api.live2am.com/api";
   const fullUrl = `${baseUrl}${url}`;
 
   // Get JWT token from localStorage

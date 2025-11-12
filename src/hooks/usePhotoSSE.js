@@ -7,7 +7,7 @@ function usePhotoSSE(setPhotos, showNotification, currentUserId) {
   // Hàm lấy thông tin user từ user_id
   const getUserInfo = async (userId) => {
     try {
-      const response = await fetch(`http://localhost:8081/user/${userId}`);
+      const response = await fetch(`https://api.live2am.com/user/${userId}`);
       if (!response.ok) {
         throw new Error("Failed to fetch user info");
       }
@@ -22,7 +22,7 @@ function usePhotoSSE(setPhotos, showNotification, currentUserId) {
   // Hàm format tên user
   const formatUserName = (user) => {
     if (!user) return "Someone";
-    const fullName = `${user.first_name || ''} ${user.last_name || ''}`.trim();
+    const fullName = `${user.first_name || ""} ${user.last_name || ""}`.trim();
     return fullName || user.login_name || "Someone";
   };
 
@@ -38,7 +38,7 @@ function usePhotoSSE(setPhotos, showNotification, currentUserId) {
     console.log("Setting up SSE with token:", token);
 
     const eventSource = new EventSource(
-      `http://localhost:8081/api/stream/stream?token=${token}`
+      `https://api.live2am.com/api/stream/stream?token=${token}`
     );
     eventSourceRef.current = eventSource;
 
@@ -54,7 +54,7 @@ function usePhotoSSE(setPhotos, showNotification, currentUserId) {
 
         showNotification({
           message: `${userName} uploaded a new photo!`,
-          severity: "success"
+          severity: "success",
         });
       }
     });
@@ -66,7 +66,7 @@ function usePhotoSSE(setPhotos, showNotification, currentUserId) {
         photo_id: data.photo_id,
         photo_owner_id: data.photo_owner_id,
         commenter_id: data.comment.user._id,
-        currentUserId: currentUserId
+        currentUserId: currentUserId,
       });
 
       setPhotos((prevPhotos) =>
@@ -74,7 +74,7 @@ function usePhotoSSE(setPhotos, showNotification, currentUserId) {
           if (photo._id === data.photo_id) {
             const allComments = [...photo.comments, data.comment];
             const uniqueComments = Array.from(
-              new Map(allComments.map(c => [c._id, c])).values()
+              new Map(allComments.map((c) => [c._id, c])).values()
             );
             return { ...photo, comments: uniqueComments };
           }
@@ -97,17 +97,20 @@ function usePhotoSSE(setPhotos, showNotification, currentUserId) {
           commenterId,
           currentUserIdStr,
           isOwner: currentUserIdStr === photoOwnerId,
-          isDifferentUser: currentUserIdStr !== commenterId
+          isDifferentUser: currentUserIdStr !== commenterId,
         });
 
-        if (currentUserIdStr === photoOwnerId && currentUserIdStr !== commenterId) {
+        if (
+          currentUserIdStr === photoOwnerId &&
+          currentUserIdStr !== commenterId
+        ) {
           const userName = formatUserName(data.comment.user);
 
           console.log("Showing notification:", userName);
 
           showNotification({
             message: `${userName} commented on your photo`,
-            severity: "info"
+            severity: "info",
           });
         } else {
           console.log("Not showing notification - conditions not met");
@@ -117,7 +120,7 @@ function usePhotoSSE(setPhotos, showNotification, currentUserId) {
           hasShowNotification: !!showNotification,
           hasCommentUser: !!data.comment?.user,
           hasCurrentUserId: !!currentUserId,
-          hasPhotoOwnerId: !!data.photo_owner_id
+          hasPhotoOwnerId: !!data.photo_owner_id,
         });
       }
     });
@@ -127,7 +130,7 @@ function usePhotoSSE(setPhotos, showNotification, currentUserId) {
       if (showNotification) {
         showNotification({
           message: "Connection error",
-          severity: "error"
+          severity: "error",
         });
       }
     };

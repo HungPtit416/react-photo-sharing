@@ -93,7 +93,7 @@ function UserPhotos() {
       }
 
       const response = await fetch(
-        `http://localhost:8081/api/photo/commentsOfPhoto/${photoId}`,
+        `https://api.live2am.com/api/photo/commentsOfPhoto/${photoId}`,
         {
           method: "POST",
           headers: {
@@ -176,7 +176,7 @@ function UserPhotos() {
         <Card key={photo._id} className="photo-card">
           <CardMedia
             component="img"
-            image={`http://localhost:8081/images/${photo.file_name}`}
+            image={`https://api.live2am.com/images/${photo.file_name}`}
             alt={`Photo by ${user.last_name}`}
             className="photo-image"
           />

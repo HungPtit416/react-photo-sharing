@@ -63,7 +63,7 @@ function LoginRegister({ onLogin }) {
     setLoginError("");
 
     try {
-      const response = await fetch("http://localhost:8081/admin/login", {
+      const response = await fetch("https://api.live2am.com/admin/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -80,7 +80,7 @@ function LoginRegister({ onLogin }) {
 
         // LƯU CẢ TOKEN VÀ USER ID VÀO LOCALSTORAGE
         localStorage.setItem("authToken", data.token);
-        localStorage.setItem("userId", data.user._id);  
+        localStorage.setItem("userId", data.user._id);
         // Optional: Lưu toàn bộ user info để dùng sau
         localStorage.setItem("userInfo", JSON.stringify(data.user));
 
@@ -146,7 +146,7 @@ function LoginRegister({ onLogin }) {
     setRegSuccess("");
 
     try {
-      const response = await fetch("http://localhost:8081/user", {
+      const response = await fetch("https://api.live2am.com/user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
