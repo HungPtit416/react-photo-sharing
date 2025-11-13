@@ -14,6 +14,7 @@ import UserList from "./components/UserList";
 import UserPhotos from "./components/UserPhotos";
 import LoginRegister from "./components/LoginRegister";
 import UserHome from "./components/UserHome";
+import ChatPage from "./components/ChatPage";
 
 const App = (props) => {
   const [user, setUser] = useState(null);
@@ -112,7 +113,7 @@ const App = (props) => {
       clearTimeout(reconnectTimeoutRef.current);
       reconnectTimeoutRef.current = null;
     }
-
+   
     if (wsRef.current) {
       if (wsRef.current.readyState === WebSocket.OPEN) {
         wsRef.current.close(1000, "User logged out");
@@ -234,32 +235,55 @@ const App = (props) => {
             />
           </Grid>
           <div className="main-topbar-buffer" />
-          <Grid item sm={3}>
-            <Paper className="main-grid-item">
-              <UserList onlineUserIds={onlineUserIds} />
-            </Paper>
-          </Grid>
-          <Grid item sm={9}>
-            <Paper className="main-grid-item">
-              <Routes>
-                <Route path="/home" element={<UserHome />} />
-                <Route path="/users/:userId" element={<UserDetail />} />
-                <Route path="/photos/:userId" element={<UserPhotos />} />
-                <Route
-                  path="/users"
-                  element={<UserList onlineUserIds={onlineUserIds} />}
-                />
-                <Route
-                  path="/"
-                  element={<Navigate to={`/users/${user._id}`} />}
-                />
-                <Route
-                  path="*"
-                  element={<Navigate to={`/users/${user._id}`} />}
-                />
-              </Routes>
-            </Paper>
-          </Grid>
+          
+          <Routes>
+            {/* Chat page - full width layout */}
+            <Route 
+              path="/chat" 
+              element={
+                <Grid item xs={12}>
+                  <Paper className="main-grid-item">
+                    <ChatPage />
+                  </Paper>
+                </Grid>
+              } 
+            />
+            
+            {/* Other pages - sidebar layout */}
+            <Route 
+              path="*" 
+              element={
+                <>
+                  <Grid item sm={3}>
+                    <Paper className="main-grid-item">
+                      <UserList onlineUserIds={onlineUserIds} />
+                    </Paper>
+                  </Grid>
+                  <Grid item sm={9}>
+                    <Paper className="main-grid-item">
+                      <Routes>
+                        <Route path="/home" element={<UserHome />} />
+                        <Route path="/users/:userId" element={<UserDetail />} />
+                        <Route path="/photos/:userId" element={<UserPhotos />} />
+                        <Route
+                          path="/users"
+                          element={<UserList onlineUserIds={onlineUserIds} />}
+                        />
+                        <Route
+                          path="/"
+                          element={<Navigate to={`/users/${user._id}`} />}
+                        />
+                        <Route
+                          path="*"
+                          element={<Navigate to={`/users/${user._id}`} />}
+                        />
+                      </Routes>
+                    </Paper>
+                  </Grid>
+                </>
+              } 
+            />
+          </Routes>
         </Grid>
       </div>
     </Router>

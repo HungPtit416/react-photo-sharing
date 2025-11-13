@@ -194,6 +194,13 @@ function TopBar({ user, onLogout, onlineCount = 0 }) {
                 </Button>
                 <Button
                   color="inherit"
+                  onClick={() => navigate("/chat")}
+                  sx={{ mr: 2 }}
+                >
+                  Chat Messages
+                </Button>
+                <Button
+                  color="inherit"
                   onClick={() => setUploadDialogOpen(true)}
                   sx={{ mr: 2 }}
                 >
