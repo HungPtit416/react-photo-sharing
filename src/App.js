@@ -53,7 +53,7 @@ const App = (props) => {
         return;
       }
 
-      const ws = new WebSocket(`ws://api.live2am.com/ws?token=${token}`);
+      const ws = new WebSocket(`wss://api.live2am.com/ws?token=${token}`);
 
       ws.onopen = () => {
         console.log("WebSocket connected");
